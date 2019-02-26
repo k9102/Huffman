@@ -63,6 +63,7 @@ public:
 private:
 	void Traverse(NodePtr tree, string prefix);
 	map<char, string> code_map_;
+	NodePtr tree_;
 };
 
 
@@ -120,7 +121,10 @@ void HuffCode::BuildTree(string str)
 	/*
 	2) Traverse the Huffman Tree and assign codes to characters
 	*/
-	Traverse(que.top(), "");
+	tree_ = que.top();
+	Traverse(tree_, "");
+
+	
 }
 
 int main()
@@ -145,6 +149,5 @@ int main()
 		_CrtMemDumpStatistics(&s3);
 		_CrtDumpMemoryLeaks();
 	}
-
 }
 
