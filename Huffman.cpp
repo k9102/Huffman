@@ -30,25 +30,6 @@ public:
 };
 
 
-string str = R"(aaaaabbbbbbbbbccccccccccccdddddddddddddeeeeeeeeeeeeeeeefffffffffffffffffffffffffffffffffffffffffffff)";
-map<char, string> code_map;
-void Traverse(NodePtr tree, string prefix)
-{
-	if (nullptr == tree)
-	{
-		return;
-	}
-	if (0 != tree->val_)
-	{
-		code_map[tree->val_] = prefix;
-	}
-	else
-	{
-		Traverse(tree->l_, prefix + "0");
-		Traverse(tree->r_, prefix + "1");
-	}
-}
-
 /*
 https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
 There are mainly two major parts in Huffman Coding
@@ -67,7 +48,42 @@ Input is array of unique characters along with their frequency of occurrences an
 4. Repeat steps#2 and #3 until the heap contains only one node.The remaining node is the root node and the tree is complete.
 */
 
-void GenerateHuffCode()
+class HuffCode
+{
+public:
+	void BuildTree(string str);
+	void PrintCode()
+	{
+		for (auto[val, bits] : code_map_)
+		{
+			cout << val << ":" + bits << endl;
+		}
+	}
+
+private:
+	void Traverse(NodePtr tree, string prefix);
+	map<char, string> code_map_;
+};
+
+
+void HuffCode::Traverse(NodePtr tree, string prefix)
+{
+	if (nullptr == tree)
+	{
+		return;
+	}
+	if (0 != tree->val_)
+	{
+		code_map_[tree->val_] = prefix;
+	}
+	else
+	{
+		Traverse(tree->l_, prefix + "0");
+		Traverse(tree->r_, prefix + "1");
+	}
+}
+
+void HuffCode::BuildTree(string str)
 {
 	map<char, int> tbl;
 
@@ -105,18 +121,11 @@ void GenerateHuffCode()
 	2) Traverse the Huffman Tree and assign codes to characters
 	*/
 	Traverse(que.top(), "");
-
-	for (auto[val, bits] : code_map)
-	{
-		cout << val << ":" + bits << endl;
-	}
-
-	code_map.clear();
 }
 
 int main()
 {
-
+	string str = R"(aaaaabbbbbbbbbccccccccccccdddddddddddddeeeeeeeeeeeeeeeefffffffffffffffffffffffffffffffffffffffffffff)";
 #if 0
 	_CrtSetBreakAlloc(188);
 #endif
@@ -124,7 +133,11 @@ int main()
 	_CrtMemState s1, s2,s3;
 
 	_CrtMemCheckpoint(&s1);
-	GenerateHuffCode();
+	{
+		HuffCode code;
+		code.BuildTree(str);
+		code.PrintCode();
+	}
 	_CrtMemCheckpoint(&s2);
 
 	if (_CrtMemDifference(&s3, &s1, &s2))
