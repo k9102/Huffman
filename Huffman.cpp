@@ -22,10 +22,10 @@ using NodePtr = shared_ptr<Node>;
 class Node
 {
 public:
-	char val_;
-	int freq_;
-	NodePtr l_;
-	NodePtr r_;
+	char val_; /*value*/
+	int freq_; /*frequency*/
+	NodePtr l_; /*left node*/
+	NodePtr r_; /*right node*/
 	Node(char val, int freq, NodePtr l = nullptr, NodePtr r = nullptr) : val_(val), freq_(freq), l_(l), r_(r) {}
 };
 
@@ -105,7 +105,6 @@ void HuffCode::BuildTree(string str)
 		que.push(make_shared<Node>(val, freq));
 	}
 
-	//4. Repeat steps#2 and #3 until the heap contains only one node.The remaining node is the root node and the tree is complete.
 	while (que.size() >= 2)
 	{
 		//2. Extract two nodes with the minimum frequency from the min heap.
@@ -116,15 +115,14 @@ void HuffCode::BuildTree(string str)
 		//3. Create a new internal node with frequency equal to the sum of the two nodes frequencies.Make the first extracted node as its left child and the other extracted node as its right child.Add this node to the min heap.
 		que.push(make_shared<Node>(0, t_freq, l, r));
 
-	}
+	}   //4. Repeat steps#2 and #3 until the heap contains only one node.The remaining node is the root node and the tree is complete.
 
 	/*
 	2) Traverse the Huffman Tree and assign codes to characters
 	*/
 	tree_ = que.top();
+	code_map_.clear();
 	Traverse(tree_, "");
-
-	
 }
 
 int main()
@@ -134,7 +132,7 @@ int main()
 	_CrtSetBreakAlloc(188);
 #endif
 
-	_CrtMemState s1, s2,s3;
+	_CrtMemState s1, s2, s3;
 
 	_CrtMemCheckpoint(&s1);
 	{
